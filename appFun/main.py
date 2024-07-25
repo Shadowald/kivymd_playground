@@ -3,8 +3,8 @@ from kivymd.uix.label import MDLabel, MDIcon
 from kivymd.uix.screen import Screen
 from kivymd.uix.button import MDRectangleFlatButton, MDIconButton, MDFloatingActionButton, MDFlatButton
 from kivymd.uix.dialog import MDDialog
-from kivy.lang import Builder
-from helpers import username_helper, list_helper, screen_helper
+from kivy.lang.builder import Builder
+from helpers import username_helper, list_helper, screen_helper, navigation_helper, manager_helper
 from kivymd.uix.list import ThreeLineListItem, MDList, ThreeLineIconListItem, IconLeftWidget
 from kivymd.uix.list import ThreeLineAvatarListItem, ImageLeftWidget
 from kivy.uix.scrollview import ScrollView
@@ -12,8 +12,27 @@ from kivymd.uix.list import OneLineListItem
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
 from kivy.core.window import Window
+from kivy.uix.screenmanager import ScreenManager
 
-# Window.size = (300, 500)
+Window.size = (300, 500)
+
+
+class MenuScreen(Screen):
+    pass
+
+
+class ProfileScreen(Screen):
+    pass
+
+
+class UploadScreen(Screen):
+    pass
+
+
+sm = ScreenManager()
+sm.add_widget(MenuScreen(name='menu'))
+sm.add_widget(ProfileScreen(name='profile'))
+sm.add_widget(UploadScreen(name='upload'))
 
 
 class AppFun(MDApp):
@@ -24,10 +43,12 @@ class AppFun(MDApp):
         self.theme_cls.theme_style = 'Dark'
 
         # Needed for bottom toolbar to show title, icons, and things
-        self.theme_cls.material_style = 'M2'
+        # self.theme_cls.material_style = 'M2'
 
         # screen = Builder.load_string(list_helper)
-        screen = Builder.load_string(screen_helper)
+        # screen = Builder.load_string(screen_helper)
+        # screen = Builder.load_string(navigation_helper)
+        screen = Builder.load_string(manager_helper)
         # screen = Screen()
 
         self.username = Builder.load_string(username_helper)
@@ -75,7 +96,7 @@ class AppFun(MDApp):
                             ])
         table.bind(on_check_press=self.check_press)
         table.bind(on_row_press=self.check_press)
-        #screen.add_widget(table)
+        # screen.add_widget(table)
 
         '''
         
@@ -106,9 +127,8 @@ class AppFun(MDApp):
             items.add_widget(image)
             # self.root.ids.container.add_widget(items)
 
-
     def show_data(self, obj):
-        if self.username.text is "":
+        if self.username.text == "":
             check_string = 'Please enter a username'
         else:
             check_string = self.username.text + ' does not exit'
